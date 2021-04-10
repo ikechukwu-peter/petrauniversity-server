@@ -24,8 +24,14 @@ app.use(xss());
 //compress app
 app.use(compression());
 
+//Define CORS options
+const corsOptions = {
+  origin: "https://petrau.netlify.app",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
 //CORS enable
-app.use(cors());
+app.use(cors(corsOptions));
 // 3) ROUTES
 // app.use('/', viewRouter);
 app.use("/api", userRouter);
