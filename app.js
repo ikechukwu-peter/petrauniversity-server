@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const compression = require("compression");
+const cors = require("cors");
 
 const userRouter = require("./routes/userRoutes");
 const app = express();
@@ -23,6 +24,8 @@ app.use(xss());
 //compress app
 app.use(compression());
 
+//CORS enable
+app.use(cors());
 // 3) ROUTES
 // app.use('/', viewRouter);
 app.use("/api", userRouter);
