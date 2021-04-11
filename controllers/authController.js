@@ -76,6 +76,7 @@ exports.signup = async (req, res) => {
     if ((err.name = "ValidatorError")) {
       return res.status(400).json({
         status: "fail",
+        error: err.message,
         message: "Email taken already ",
       });
     }
