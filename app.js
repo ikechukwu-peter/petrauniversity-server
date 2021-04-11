@@ -30,7 +30,7 @@ const corsOptions = {
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
-//CORS enable
+// //CORS enable
 app.use(cors(corsOptions));
 // 3) ROUTES
 // app.use('/', viewRouter);
