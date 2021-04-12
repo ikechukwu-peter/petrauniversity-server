@@ -13,6 +13,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@sendgrid/mail": "^7.4.2",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -23,11 +24,9 @@
     "helmet": "^4.4.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.18",
-    "nodemailer": "^6.5.0",
     "validator": "^13.5.2",
     "xss-clean": "^0.1.1"
   },
- 
   "engines": {
     "node": "^12"
   }
