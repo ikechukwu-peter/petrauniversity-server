@@ -18,7 +18,7 @@ router.put(
   authController.authenticate,
   authController.updatePassword
 );
-router.get(
+router.patch(
   "/resendverification/:email/:userId",
   authController.resendVerificationEmail
 );
