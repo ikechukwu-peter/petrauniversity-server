@@ -9,7 +9,6 @@ const sendEmail = async (options) => {
     html: options.html,
   };
   await sgMail.send(msg);
-  console.log("Email sent");
 };
 
 module.exports = sendEmail;
