@@ -51,9 +51,7 @@ exports.signup = async (req, res) => {
     });
 
     //The URL sent to the email of the user
-    const verifyEmailAddress = `${req.protocol}://${req.get(
-      "host"
-    )}/api/auth/user/verification/verify-account/${newUser._id}/${randomToken}`;
+    const verifyEmailAddress = `${process.env.CLIENT_URL}/api/auth/user/verification/verify-account/${newUser._id}/${randomToken}`;
 
     //the message sent along with the url for verification
     const message = `You have just signed up for Petra University, \nclick this link: ${verifyEmailAddress} to confirm your email and continue with your set up. \nIf you didn't sign up for Petra University please ignore this email.`;
@@ -76,7 +74,6 @@ exports.signup = async (req, res) => {
     if ((err.name = "ValidatorError")) {
       return res.status(400).json({
         status: "fail",
-        error: err,
         message: "Email taken already ",
       });
     }
@@ -194,7 +191,6 @@ exports.authenticate = async (req, res, next) => {
 //Verify an email address
 exports.verifyEmail = async (req, res) => {
   try {
-    //const status = "active";
     const { secretCode } = req.params;
 
     const hashedToken = encryption(secretCode);
@@ -246,16 +242,16 @@ exports.forgotPassword = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     //sending to user email
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/user/resetPassword/${resetToken}`;
+    const resetURL = `${process.env.CLIENT_URL}/api/user/resetPassword/${resetToken}`;
 
+    const html = `<p>Forgot your password? Send a password and it confirmation password to this link: ${resetURL}. \n <br /> If you didn't reset your password please ignore this email.</p>`;
     const message = `<p>Forgot your password? Send a password and it confirmation password to this link: ${resetURL}. \n <br /> If you didn't reset your password please ignore this email.</p>`;
 
     await sendEmail({
       email: user.email,
       subject:
         "Petra University. Your password reset token (valid for 10 minutes)",
+      html,
       message,
     });
 
@@ -378,14 +374,19 @@ exports.resendVerificationEmail = async (req, res) => {
     //Search for user in the collections
 
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "fail",
+        message: "invalid user id provided",
+      });
+    }
 
     user.verificationToken = verificationToken;
-    await user.save({ validateModifiedOnly: true });
+    user.verificationTokenExpires = Date.now() + 60 * 60 * 1000;
 
+    await user.save({ validateModifiedOnly: true });
     //The URL sent to the email of the user
-    const verifyEmailAddress = `${req.protocol}://${req.get(
-      "host"
-    )}/api/auth/user/verification/verify-account/${userId}/${randomToken}`;
+    const verifyEmailAddress = `${process.env.CLIENT_URL}/api/auth/user/verification/verify-account/${userId}/${randomToken}`;
 
     //the message sent along with the url for verification
     const message = `<p>Click this link to verify: ${verifyEmailAddress} to confirm your email and continue with your set up. \n <br />If you didn't sign up for Petra University please ignore this email.</p>`;
@@ -398,11 +399,6 @@ exports.resendVerificationEmail = async (req, res) => {
         " Token Resent, Petra Univeristy, confirm  Email  (valid for an hour)",
       html,
       message,
-    });
-
-    res.status(201).json({
-      status: "success",
-      message: "Check your email inbox for email confirmation",
     });
   } catch (err) {
     res.status(500).json({
