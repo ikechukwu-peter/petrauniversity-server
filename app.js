@@ -25,13 +25,13 @@ app.use(xss());
 app.use(compression());
 
 //Define CORS options
-const corsOptions = {
-  origin: process.env.CLIENT_URL,
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+// const corsOptions = {
+//   origin: process.env.CLIENT_URL,
+//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
 
 //CORS enable
-app.use(cors(corsOptions));
+app.use(cors());
 
 // 3) ROUTES
 //Yet to be created
